@@ -1,0 +1,1043 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Xenmark Garment Manufacturer &amp; Printing House - Official Invoice</title>
+  
+  <!-- Google Fonts: Outfit, Montserrat, Great Vibes for Thank You -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Inter:wght@400;500;600;700;800;900&family=Montserrat:wght@400;500;600;700;800;900&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome Icons for UI -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- Local high-performance, offline-ready libraries -->
+  <script src="qrcode.min.js"></script>
+  <script src="html2canvas.min.js"></script>
+  <script src="jspdf.umd.min.js"></script>
+
+  <link rel="stylesheet" href="style.css?v=2.1">
+</head>
+<body class="theme-burgundy">
+
+  <!-- Top App Navigation Bar -->
+  <header class="app-header no-print">
+    <div class="header-left">
+      <div class="app-logo">
+        <i class="fa-solid fa-file-invoice-dollar"></i>
+        <span>Xenmark <strong>Invoice Pro</strong></span>
+      </div>
+      <div class="status-indicator" id="saveStatus">
+        <i class="fa-solid fa-circle-check"></i>
+        <span>Auto-saved</span>
+      </div>
+    </div>
+
+    <!-- Quick action buttons -->
+    <div class="header-actions">
+      <!-- Page Mode Switcher -->
+      <div class="page-mode-pill-wrap" title="Page Layout Mode">
+        <button class="mode-pill active" id="btnMode1Page" data-mode="single">
+          <i class="fa-solid fa-file"></i> 1 Page Fit
+        </button>
+        <button class="mode-pill" id="btnMode2Page" data-mode="multi">
+          <i class="fa-solid fa-copy"></i> 2 Pages
+        </button>
+      </div>
+
+      <button class="btn btn-secondary" id="btnToggleSidebar" title="Toggle Settings Panel">
+        <i class="fa-solid fa-sliders"></i>
+        <span>Settings</span>
+      </button>
+
+      <button class="btn btn-secondary" id="btnResetData" title="Reset to Sample">
+        <i class="fa-solid fa-rotate-left"></i>
+        <span>Reset Sample</span>
+      </button>
+
+      <button class="btn btn-secondary" id="btnPrintInvoice" title="Print Invoice">
+        <i class="fa-solid fa-print"></i>
+        <span>Print</span>
+      </button>
+
+      <!-- Download Dropdown -->
+      <div class="dropdown" id="dropdownWrap">
+        <button class="btn btn-primary dropdown-toggle" id="btnDownloadMenu">
+          <i class="fa-solid fa-download"></i>
+          <span>Download</span>
+          <i class="fa-solid fa-chevron-down arrow-down"></i>
+        </button>
+        <div class="dropdown-menu" id="downloadDropdown">
+          <button class="dropdown-item" id="btnExportPDF">
+            <i class="fa-solid fa-file-pdf text-danger"></i>
+            <div>
+              <strong>Download as PDF</strong>
+              <small id="pdfModeNote">Exact 1:1 single A4 vector document</small>
+            </div>
+          </button>
+          <button class="dropdown-item" id="btnExportPNG">
+            <i class="fa-solid fa-file-image text-success"></i>
+            <div>
+              <strong>Download as PNG</strong>
+              <small>Ultra HD 2.5x crisp image</small>
+            </div>
+          </button>
+          <button class="dropdown-item" id="btnExportJPG">
+            <i class="fa-solid fa-image text-primary"></i>
+            <div>
+              <strong>Download as JPG</strong>
+              <small>Standard high-quality photo</small>
+            </div>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Global hidden file inputs -->
+  <input type="file" id="logoFileInput" accept="image/*" style="display:none;">
+  <input type="file" id="qrFileInput" accept="image/*" style="display:none;">
+  <input type="file" id="sigFileInput" accept="image/*" style="display:none;">
+
+  <!-- Main Container with Workspace -->
+  <div class="workspace-wrapper">
+
+    <!-- Collapsible Settings & Customization Sidebar -->
+    <aside class="sidebar-panel no-print" id="sidebarPanel">
+      <div class="sidebar-header">
+        <h3><i class="fa-solid fa-pen-ruler"></i> Customization</h3>
+        <button class="close-sidebar-btn" id="btnCloseSidebar" title="Close sidebar">&times;</button>
+      </div>
+
+      <div class="sidebar-content">
+
+        <!-- 1. Page Fit & Layout Settings -->
+        <div class="sidebar-section">
+          <h4 class="section-title"><i class="fa-solid fa-file-lines"></i> Page Fit &amp; Layout</h4>
+          <div class="page-fit-selector">
+            <label class="fit-card active" id="cardFitSingle">
+              <input type="radio" name="pageFitOption" value="single" checked>
+              <div class="fit-card-body">
+                <strong><i class="fa-solid fa-compress"></i> 1 Page (Auto-Fit)</strong>
+                <small>Automatically scales spacing &amp; font so 6+ items fit neatly in 1 single page.</small>
+              </div>
+            </label>
+
+            <label class="fit-card" id="cardFitMulti">
+              <input type="radio" name="pageFitOption" value="multi">
+              <div class="fit-card-body">
+                <strong><i class="fa-solid fa-copy"></i> 2 Pages (Standard)</strong>
+                <small>Standard font size for long catalogs spanning 2 pages.</small>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <!-- 2. Media & Uploads -->
+        <div class="sidebar-section">
+          <h4 class="section-title"><i class="fa-solid fa-cloud-arrow-up"></i> Uploads &amp; Media</h4>
+          
+          <!-- Logo Control -->
+          <div class="sidebar-card-box">
+            <label class="control-label"><i class="fa-solid fa-image"></i> Company Logo</label>
+            <div class="btn-group-row">
+              <button class="btn btn-sm btn-primary" id="btnSidebarUploadLogo">
+                <i class="fa-solid fa-upload"></i> Upload Logo
+              </button>
+              <button class="btn btn-sm btn-secondary" id="btnResetLogo" title="Reset to Xenmark Monogram">
+                <i class="fa-solid fa-rotate-left"></i> Reset Monogram
+              </button>
+            </div>
+          </div>
+
+          <!-- QR Code Control -->
+          <div class="sidebar-card-box">
+            <label class="control-label"><i class="fa-solid fa-qrcode"></i> Payment QR Code</label>
+            <div class="btn-group-row">
+              <button class="btn btn-sm btn-primary" id="btnOpenQRGenerator">
+                <i class="fa-solid fa-wand-magic-sparkles"></i> Auto UPI QR
+              </button>
+              <button class="btn btn-sm btn-outline" id="btnSidebarUploadQR">
+                <i class="fa-solid fa-upload"></i> Upload QR
+              </button>
+            </div>
+          </div>
+
+          <!-- Signature Control -->
+          <div class="sidebar-card-box">
+            <label class="control-label"><i class="fa-solid fa-signature"></i> Authorized Signature</label>
+            <div class="btn-group-row">
+              <button class="btn btn-sm btn-primary" id="btnOpenSigModal">
+                <i class="fa-solid fa-pen-nib"></i> Draw Signature
+              </button>
+              <button class="btn btn-sm btn-outline" id="btnSidebarUploadSig">
+                <i class="fa-solid fa-upload"></i> Upload File
+              </button>
+              <button class="btn btn-sm btn-secondary" id="btnClearSignatureSidebar" title="Clear Signature">
+                <i class="fa-solid fa-trash-can"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. Fast Product Addition -->
+        <div class="sidebar-section">
+          <h4 class="section-title"><i class="fa-solid fa-shirt"></i> Add Items</h4>
+          
+          <div class="quick-add-form">
+            <div class="form-group">
+              <label>Product Name</label>
+              <input type="text" id="quickItemName" class="form-control" placeholder="e.g. CUSTOM HOODIE" value="CUSTOM HOODIE DTF PRINT">
+            </div>
+            <div class="form-row-2">
+              <div class="form-group">
+                <label>Pieces (Qty)</label>
+                <input type="number" id="quickItemQty" class="form-control" value="1" min="1">
+              </div>
+              <div class="form-group">
+                <label>Rate (<span class="currency-label">₹</span>)</label>
+                <input type="number" id="quickItemRate" class="form-control" value="650" min="0" step="any">
+              </div>
+            </div>
+            <button class="btn btn-primary btn-block" id="btnQuickAddItem">
+              <i class="fa-solid fa-plus-circle"></i> Add This Item to Invoice
+            </button>
+          </div>
+
+          <p class="section-subtitle mt-2">Or click quick preset:</p>
+          <div class="preset-items-grid">
+            <button class="preset-btn" data-name="KALMA CAP (BLACK)" data-rate="150" data-qty="6">
+              + Kalma Cap (₹150)
+            </button>
+            <button class="preset-btn" data-name="RAHAT CAP" data-rate="120" data-qty="2">
+              + Rahat Cap (₹120)
+            </button>
+            <button class="preset-btn" data-name="SABR CAP" data-rate="120" data-qty="4">
+              + Sabr Cap (₹120)
+            </button>
+            <button class="preset-btn" data-name="BLACK TSHIRT" data-rate="240" data-qty="1">
+              + Black T-Shirt (₹240)
+            </button>
+            <button class="preset-btn" data-name="CUSTOM HOODIE DTF PRINT" data-rate="650" data-qty="1">
+              + Custom Hoodie (₹650)
+            </button>
+            <button class="preset-btn" data-name="VARSITY JACKET EMBROIDERED" data-rate="1100" data-qty="1">
+              + Varsity Jacket (₹1100)
+            </button>
+          </div>
+        </div>
+
+        <!-- 4. Styling & Colors -->
+        <div class="sidebar-section">
+          <h4 class="section-title"><i class="fa-solid fa-palette"></i> Style &amp; Theme</h4>
+          
+          <div class="form-group">
+            <label>Color Theme</label>
+            <div class="theme-swatches">
+              <button class="swatch active" data-theme="burgundy" style="background: #600c1e;" title="Original Xenmark Burgundy"></button>
+              <button class="swatch" data-theme="navy" style="background: #1e3a8a;" title="Royal Navy"></button>
+              <button class="swatch" data-theme="emerald" style="background: #065f46;" title="Forest Emerald"></button>
+              <button class="swatch" data-theme="black" style="background: #18181b;" title="Classic Onyx"></button>
+              <button class="swatch" data-theme="purple" style="background: #581c87;" title="Imperial Purple"></button>
+              <button class="swatch" data-theme="amber" style="background: #9a3412;" title="Terracotta Amber"></button>
+              <label class="custom-color-picker-label" title="Custom Color">
+                <input type="color" id="customColorInput" value="#600c1e">
+                <i class="fa-solid fa-eye-dropper"></i>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Typography Font</label>
+            <select id="fontSelect" class="form-control">
+              <option value="'Inter', -apple-system, sans-serif">Inter (Original Photo Match)</option>
+              <option value="'Montserrat', sans-serif">Montserrat (Bold Headings)</option>
+              <option value="'Outfit', sans-serif">Outfit (Clean Modern)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Currency Symbol</label>
+            <div class="currency-pills">
+              <button class="pill active" data-currency="₹">₹ INR</button>
+              <button class="pill" data-currency="$">$ USD</button>
+              <button class="pill" data-currency="€">€ EUR</button>
+              <button class="pill" data-currency="£">£ GBP</button>
+              <button class="pill" data-currency="AED">AED</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5. Taxes & Calculations -->
+        <div class="sidebar-section">
+          <h4 class="section-title"><i class="fa-solid fa-calculator"></i> Taxes &amp; Totals</h4>
+          
+          <div class="form-row-2">
+            <div class="form-group">
+              <label>GST Rate (%)</label>
+              <div class="gst-quick-select">
+                <select id="gstRateSelect" class="form-control">
+                  <option value="0" selected>0% (As in Image)</option>
+                  <option value="5">5% (Garments &lt;₹1000)</option>
+                  <option value="12">12% (Standard apparel)</option>
+                  <option value="18">18% (Printing &amp; Custom)</option>
+                  <option value="28">28%</option>
+                  <option value="custom">Custom %</option>
+                </select>
+                <input type="number" id="customGstInput" class="form-control mt-1" style="display:none;" placeholder="Enter %" min="0" max="100" step="0.5">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Discount</label>
+              <div class="input-with-select">
+                <input type="number" id="discountInput" class="form-control" value="0" min="0" step="any">
+                <select id="discountTypeSelect">
+                  <option value="amount">₹ Flat</option>
+                  <option value="percent">% Off</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label>Amount Paid</label>
+              <input type="number" id="paidAmountInput" class="form-control" value="0" min="0" step="any">
+            </div>
+            <div class="form-group">
+              <label>Payment Status</label>
+              <select id="paymentStatusSelect" class="form-control">
+                <option value="UNPAID">UNPAID</option>
+                <option value="PAID">PAID</option>
+                <option value="PARTIALLY PAID">PARTIAL</option>
+                <option value="PENDING">PENDING</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </aside>
+
+    <!-- Canvas Preview Area -->
+    <main class="canvas-viewport">
+      
+      <!-- Interactive Zoom & Action bar above the document -->
+      <div class="canvas-toolbar no-print">
+        <div class="toolbar-hint">
+          <i class="fa-solid fa-pen text-accent"></i>
+          <span>Click any text directly on the sheet to edit. Everything calculates &amp; syncs live!</span>
+        </div>
+        <div class="toolbar-controls">
+          <div class="page-fit-indicator" id="pageFitBadge">
+            <i class="fa-solid fa-file"></i> Single Page Fit
+          </div>
+          <button class="btn-icon" id="btnZoomOut" title="Zoom Out"><i class="fa-solid fa-magnifying-glass-minus"></i></button>
+          <span id="zoomLevelText">100%</span>
+          <button class="btn-icon" id="btnZoomIn" title="Zoom In"><i class="fa-solid fa-magnifying-glass-plus"></i></button>
+          <button class="btn-icon" id="btnZoomFit" title="Reset Zoom"><i class="fa-solid fa-expand"></i></button>
+        </div>
+      </div>
+
+      <!-- Notice Banner when item count > 5 -->
+      <div class="page-overflow-banner no-print" id="itemCountNotice" style="display:none;">
+        <div class="notice-text">
+          <i class="fa-solid fa-circle-exclamation"></i>
+          <span>You have <strong id="itemCountDisplay">6</strong> items. Would you like to keep it on 1 page?</span>
+        </div>
+        <div class="notice-actions">
+          <button class="btn btn-sm btn-primary" id="btnBannerFit1Page">
+            <i class="fa-solid fa-compress"></i> 1 Page (Auto-Fit Compact)
+          </button>
+          <button class="btn btn-sm btn-secondary" id="btnBannerFit2Page">
+            <i class="fa-solid fa-copy"></i> 2 Pages (Standard)
+          </button>
+        </div>
+      </div>
+
+      <!-- THE INVOICE SHEET (EXACT 1:1 REPLICA MATCHING UPLOADED PHOTO) -->
+      <div class="invoice-container-outer" id="invoiceContainerOuter">
+        <div class="invoice-paper" id="invoicePaper">
+
+          <!-- 1. TOP HEADER SECTION -->
+          <div class="inv-top-header">
+            <!-- Left Company Brand -->
+            <div class="inv-brand-box">
+              <div class="logo-wrapper interactive-zone" id="logoWrapper" title="Click to upload your logo">
+                <div class="hover-overlay no-print"><i class="fa-solid fa-camera"></i> Change Logo</div>
+                
+                <div id="logoContainer">
+                  <!-- Exact Xenmark 3-ribbon monogram SVG -->
+                  <div class="default-xenmark-logo" id="defaultXenmarkLogo">
+                    <svg class="xenmark-svg" viewBox="0 0 160 85" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <!-- Left Burgundy Chevron Ribbon -->
+                      <path d="M28 68L48 18L64 45L46 68H28Z" fill="#600c1e"/>
+                      <!-- Center Black Folded Ribbon -->
+                      <path d="M58 68L80 26L102 68H84L80 60L76 68H58Z" fill="#111111"/>
+                      <!-- Right Burgundy Chevron Ribbon -->
+                      <path d="M132 68L112 18L96 45L114 68H132Z" fill="#600c1e"/>
+                      <!-- Center Diamond Accent -->
+                      <polygon points="80,14 88,26 80,38 72,26" fill="#600c1e"/>
+                    </svg>
+                    <div class="logo-text-group">
+                      <span class="logo-name" contenteditable="true" spellcheck="false">XENMARK</span>
+                      <span class="logo-tagline" contenteditable="true" spellcheck="false">• Customise • Printing • Embroidery</span>
+                    </div>
+                  </div>
+                  <img id="customUploadedLogoImg" src="" alt="Custom Logo" class="user-uploaded-logo" style="display:none;">
+                </div>
+              </div>
+            </div>
+
+            <!-- Vertical Divider -->
+            <div class="inv-header-divider"></div>
+
+            <!-- Right Garment Manufacturer Info & 7 Icons -->
+            <div class="inv-header-services">
+              <div class="services-headline" contenteditable="true" spellcheck="false">
+                GARMENT MANUFACTURER &amp; PRINTING HOUSE
+              </div>
+              <div class="services-subline" contenteditable="true" spellcheck="false">
+                T-SHIRTS &nbsp;|&nbsp; CAPS &nbsp;|&nbsp; HOODIES &nbsp;|&nbsp; JACKETS
+              </div>
+              <div class="services-subline secondary" contenteditable="true" spellcheck="false">
+                EMBROIDERY &nbsp;|&nbsp; DTF &nbsp;|&nbsp; DTG &nbsp;|&nbsp; CUSTOM PRINTING
+              </div>
+
+              <!-- Top Service Category Icons with Vertical Dividers -->
+              <div class="top-service-icons">
+                <div class="service-icon-item">
+                  <div class="icon-circle">
+                    <!-- T-shirt icon -->
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M20.38 3.46L16 2a4 4 0 01-8 0L3.62 3.46a2 2 0 00-1.34 2.23l.58 3.47a1 1 0 00.99.84H6v10a2 2 0 002 2h8a2 2 0 002-2V10h2.15a1 1 0 00.99-.84l.58-3.47a2 2 0 00-1.34-2.23z"/>
+                    </svg>
+                  </div>
+                  <span contenteditable="true" spellcheck="false">T-SHIRTS</span>
+                </div>
+
+                <div class="svc-divider"></div>
+
+                <div class="service-icon-item">
+                  <div class="icon-circle">
+                    <!-- Cap icon -->
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M2 15h20M5 15c0-4.97 3.13-9 7-9s7 4.03 7 9M16 15c0 2-2 3-5 3s-9-1-9-3"/>
+                      <circle cx="12" cy="6" r="1" fill="currentColor"/>
+                    </svg>
+                  </div>
+                  <span contenteditable="true" spellcheck="false">CAPS</span>
+                </div>
+
+                <div class="svc-divider"></div>
+
+                <div class="service-icon-item">
+                  <div class="icon-circle">
+                    <!-- Hoodie icon -->
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M4 6l4-3 4 3 4-3 4 3v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6z"/>
+                      <path d="M12 3v13M9 8l3 3 3-3"/>
+                    </svg>
+                  </div>
+                  <span contenteditable="true" spellcheck="false">HOODIES</span>
+                </div>
+
+                <div class="svc-divider"></div>
+
+                <div class="service-icon-item">
+                  <div class="icon-circle">
+                    <!-- Jacket icon -->
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 4a2 2 0 00-2 2c0 1.1.9 2 2 2h1a2 2 0 012 2v1"/>
+                      <path d="M3 13l9-5 9 5v7a2 2 0 01-2 2H5a2 2 0 01-2-2v-7z"/>
+                      <path d="M12 8v14"/>
+                    </svg>
+                  </div>
+                  <span contenteditable="true" spellcheck="false">JACKETS</span>
+                </div>
+
+                <div class="svc-divider"></div>
+
+                <div class="service-icon-item">
+                  <div class="icon-circle">
+                    <!-- Scissors icon -->
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                      <circle cx="6" cy="6" r="3"/>
+                      <circle cx="6" cy="18" r="3"/>
+                      <line x1="20" y1="4" x2="8.12" y2="15.88"/>
+                      <line x1="14.47" y1="14.48" x2="20" y2="20"/>
+                      <line x1="8.12" y1="8.12" x2="12" y2="12"/>
+                    </svg>
+                  </div>
+                  <span contenteditable="true" spellcheck="false">EMBROIDERY</span>
+                </div>
+
+                <div class="svc-divider"></div>
+
+                <div class="service-icon-item">
+                  <div class="icon-circle">
+                    <!-- DTF / DTG Printer sheet icon -->
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="4" y="3" width="16" height="18" rx="2"/>
+                      <line x1="8" y1="7" x2="16" y2="7"/>
+                      <line x1="8" y1="11" x2="16" y2="11"/>
+                      <line x1="8" y1="15" x2="16" y2="15"/>
+                    </svg>
+                  </div>
+                  <span contenteditable="true" spellcheck="false">DTF / DTG<br>PRINTING</span>
+                </div>
+
+                <div class="svc-divider"></div>
+
+                <div class="service-icon-item">
+                  <div class="icon-circle">
+                    <!-- Custom Prints Target Bullseye icon -->
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                      <circle cx="12" cy="12" r="10"/>
+                      <circle cx="12" cy="12" r="6"/>
+                      <circle cx="12" cy="12" r="2" fill="currentColor"/>
+                    </svg>
+                  </div>
+                  <span contenteditable="true" spellcheck="false">CUSTOM<br>PRINTS</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2. DARK MAROON "INVOICE" TITLE BANNER -->
+          <div class="inv-title-banner">
+            <div class="banner-title-text" contenteditable="true" spellcheck="false">INVOICE</div>
+            <div class="banner-slanted-badge">
+              <div class="banner-meta-grid">
+                <div class="meta-label">Bill No.</div>
+                <div class="meta-val" contenteditable="true" spellcheck="false" id="docBillNo"></div>
+                <div class="meta-label">Date</div>
+                <div class="meta-val" contenteditable="true" spellcheck="false" id="docBillDate">30-10-2025</div>
+                <div class="meta-label">Due Date</div>
+                <div class="meta-val" contenteditable="true" spellcheck="false" id="docDueDate">30-11-2025</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. BILL TO & BILL BY SECTION (TWO ROUNDED BOXES) -->
+          <div class="inv-parties-row">
+            <!-- BILL TO BOX -->
+            <div class="party-box bill-to-box">
+              <div class="party-box-header">
+                <div class="party-badge-pill">
+                  <span class="pill-dot">●</span>
+                  <span contenteditable="true" spellcheck="false">BILL TO</span>
+                </div>
+              </div>
+              <div class="party-box-body">
+                <table class="party-table">
+                  <tr>
+                    <td class="lbl">Name</td>
+                    <td class="sep">:</td>
+                    <td class="val" contenteditable="true" spellcheck="false">ARABWEARS</td>
+                  </tr>
+                  <tr>
+                    <td class="lbl">Company Name</td>
+                    <td class="sep">:</td>
+                    <td class="val" contenteditable="true" spellcheck="false">ARABWEARS</td>
+                  </tr>
+                  <tr>
+                    <td class="lbl">Address</td>
+                    <td class="sep">:</td>
+                    <td class="val" contenteditable="true" spellcheck="false">-</td>
+                  </tr>
+                  <tr>
+                    <td class="lbl">Phone</td>
+                    <td class="sep">:</td>
+                    <td class="val" contenteditable="true" spellcheck="false">-</td>
+                  </tr>
+                  <tr>
+                    <td class="lbl">GSTIN</td>
+                    <td class="sep">:</td>
+                    <td class="val" contenteditable="true" spellcheck="false">-</td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+
+            <!-- BILL BY BOX -->
+            <div class="party-box bill-by-box">
+              <div class="party-box-header">
+                <div class="party-badge-pill">
+                  <!-- 3x3 Grid Icon -->
+                  <svg class="header-grid-svg" viewBox="0 0 16 16" fill="currentColor">
+                    <rect x="1" y="1" width="3.5" height="3.5" rx="0.5"/>
+                    <rect x="6.2" y="1" width="3.5" height="3.5" rx="0.5"/>
+                    <rect x="11.5" y="1" width="3.5" height="3.5" rx="0.5"/>
+                    <rect x="1" y="6.2" width="3.5" height="3.5" rx="0.5"/>
+                    <rect x="6.2" y="6.2" width="3.5" height="3.5" rx="0.5"/>
+                    <rect x="11.5" y="6.2" width="3.5" height="3.5" rx="0.5"/>
+                    <rect x="1" y="11.5" width="3.5" height="3.5" rx="0.5"/>
+                    <rect x="6.2" y="11.5" width="3.5" height="3.5" rx="0.5"/>
+                    <rect x="11.5" y="11.5" width="3.5" height="3.5" rx="0.5"/>
+                  </svg>
+                  <span contenteditable="true" spellcheck="false">BILL BY</span>
+                </div>
+              </div>
+              <div class="party-box-body">
+                <table class="party-table">
+                  <tr>
+                    <td class="lbl">Name</td>
+                    <td class="sep">:</td>
+                    <td class="val" contenteditable="true" spellcheck="false">XENMARK</td>
+                  </tr>
+                  <tr>
+                    <td class="lbl">Address</td>
+                    <td class="sep">:</td>
+                    <td class="val" contenteditable="true" spellcheck="false">RAJ LAKSHMI COMPLEX, KALYANPUR,<br>LUCKNOW.</td>
+                  </tr>
+                  <tr>
+                    <td class="lbl">Phone</td>
+                    <td class="sep">:</td>
+                    <td class="val" contenteditable="true" spellcheck="false">+91 6387731661</td>
+                  </tr>
+                  <tr>
+                    <td class="lbl">GSTIN</td>
+                    <td class="sep">:</td>
+                    <td class="val" contenteditable="true" spellcheck="false">09LLIPK4037P1Z</td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- 4. FOUR HORIZONTAL META BOXES -->
+          <div class="inv-meta-cards-row">
+            <div class="meta-card">
+              <!-- Calendar grid icon -->
+              <svg class="meta-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <rect x="3" y="4" width="18" height="18" rx="2"/>
+                <line x1="16" y1="2" x2="16" y2="6"/>
+                <line x1="8" y1="2" x2="8" y2="6"/>
+                <line x1="3" y1="10" x2="21" y2="10"/>
+                <rect x="7" y="13" width="2" height="2" fill="currentColor"/>
+                <rect x="11" y="13" width="2" height="2" fill="currentColor"/>
+                <rect x="15" y="13" width="2" height="2" fill="currentColor"/>
+                <rect x="7" y="17" width="2" height="2" fill="currentColor"/>
+                <rect x="11" y="17" width="2" height="2" fill="currentColor"/>
+              </svg>
+              <div class="meta-card-content">
+                <span class="meta-card-label" contenteditable="true" spellcheck="false">Invoice Date</span>
+                <span class="meta-card-value" contenteditable="true" spellcheck="false">30-10-2025</span>
+              </div>
+            </div>
+
+            <div class="meta-card">
+              <svg class="meta-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <rect x="3" y="4" width="18" height="18" rx="2"/>
+                <line x1="16" y1="2" x2="16" y2="6"/>
+                <line x1="8" y1="2" x2="8" y2="6"/>
+                <line x1="3" y1="10" x2="21" y2="10"/>
+                <rect x="7" y="13" width="2" height="2" fill="currentColor"/>
+                <rect x="11" y="13" width="2" height="2" fill="currentColor"/>
+                <rect x="15" y="13" width="2" height="2" fill="currentColor"/>
+                <rect x="7" y="17" width="2" height="2" fill="currentColor"/>
+                <rect x="11" y="17" width="2" height="2" fill="currentColor"/>
+              </svg>
+              <div class="meta-card-content">
+                <span class="meta-card-label" contenteditable="true" spellcheck="false">Due Date</span>
+                <span class="meta-card-value" contenteditable="true" spellcheck="false">30-11-2025</span>
+              </div>
+            </div>
+
+            <div class="meta-card">
+              <svg class="meta-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+                <line x1="8" y1="13" x2="16" y2="13"/>
+                <line x1="8" y1="17" x2="16" y2="17"/>
+              </svg>
+              <div class="meta-card-content">
+                <span class="meta-card-label" contenteditable="true" spellcheck="false">PO No.</span>
+                <span class="meta-card-value" contenteditable="true" spellcheck="false">-</span>
+              </div>
+            </div>
+
+            <div class="meta-card">
+              <svg class="meta-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+                <line x1="8" y1="13" x2="16" y2="13"/>
+                <line x1="8" y1="17" x2="16" y2="17"/>
+              </svg>
+              <div class="meta-card-content">
+                <span class="meta-card-label" contenteditable="true" spellcheck="false">Reference</span>
+                <span class="meta-card-value" contenteditable="true" spellcheck="false">-</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 5. PRODUCTS & ITEMS TABLE (WITH VERTICAL AND HORIZONTAL GRID LINES) -->
+          <div class="inv-table-wrapper">
+            <table class="inv-items-table" id="itemsTable">
+              <thead>
+                <tr>
+                  <th class="col-sno">S. No.</th>
+                  <th class="col-desc">Description</th>
+                  <th class="col-qty">Pieces</th>
+                  <th class="col-rate">Rate (<span class="currency-label">₹</span>)</th>
+                  <th class="col-amount">Amount (<span class="currency-label">₹</span>)</th>
+                  <th class="col-actions no-print">Action</th>
+                </tr>
+              </thead>
+              <tbody id="itemsTableBody">
+                <!-- Dynamically populated rows -->
+              </tbody>
+            </table>
+
+            <!-- Add Row Button -->
+            <div class="table-add-row-bar no-print">
+              <button class="btn btn-primary" id="btnAddItemRow">
+                <i class="fa-solid fa-circle-plus"></i> + Add Item Line
+              </button>
+            </div>
+          </div>
+
+          <!-- 6. LOWER SPLIT SECTION: PAYMENT (LEFT) & TOTALS (RIGHT) -->
+          <div class="inv-lower-section">
+            
+            <!-- Left: Payment Details Card -->
+            <div class="payment-details-box" id="paymentDetailsSection">
+              <div class="payment-header-bar">
+                <span contenteditable="true" spellcheck="false">Payment Details</span>
+              </div>
+              
+              <div class="payment-body-row">
+                <!-- QR Code Box -->
+                <div class="qr-code-card interactive-zone" id="qrContainer" title="Click to upload custom QR or configure UPI">
+                  <div class="hover-overlay no-print"><i class="fa-solid fa-qrcode"></i> Change QR</div>
+                  
+                  <div class="qr-badge-header">
+                    <!-- UPI PhonePe Icon -->
+                    <span class="phonepe-circle">पे</span>
+                    <span class="upi-text" contenteditable="true" spellcheck="false">UPI / PhonePe</span>
+                  </div>
+
+                  <div class="qr-canvas-wrapper">
+                    <div id="dynamicQrCanvas"></div>
+                    <img id="customQrImage" src="" alt="Custom QR" style="display:none; width: 100%; height: 100%; object-fit: contain;">
+                  </div>
+
+                  <div class="qr-footer-text">
+                    <strong contenteditable="true" spellcheck="false">Scan &amp; Pay</strong>
+                    <span contenteditable="true" spellcheck="false">Pay with any UPI App</span>
+                  </div>
+                </div>
+
+                <!-- Payment Instructions -->
+                <div class="payment-instructions-card">
+                  <!-- Dark Maroon Bar for Payment Instructions -->
+                  <div class="instructions-header-bar" contenteditable="true" spellcheck="false">
+                    Payment Instructions
+                  </div>
+
+                  <ul class="instructions-list" contenteditable="true" spellcheck="false">
+                    <li>• Please scan the QR code and pay the amount.</li>
+                    <li>• After payment, share the screenshot with your order/bill number.</li>
+                    <li>• For any payment issues, contact us.</li>
+                    <li>• Thank you for your business.</li>
+                  </ul>
+
+                  <!-- Payment Status Badge -->
+                  <div class="payment-status-badge status-unpaid" id="paymentStatusDisplay">
+                    <span>PAYMENT STATUS: </span>
+                    <strong id="statusTextValue">UNPAID</strong>
+                  </div>
+
+                  <!-- Amount Paid & Due -->
+                  <div class="payment-amounts-summary">
+                    <div class="amount-line">
+                      <span>Amount paid:</span>
+                      <strong><span class="currency-label">₹</span> <span id="displayAmountPaid">0.00</span></strong>
+                    </div>
+                    <div class="amount-line highlight-due">
+                      <span>Due amount:</span>
+                      <strong><span class="currency-label">₹</span> <span id="displayDueAmount">1,860.00</span></strong>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right: Subtotal, Discount, GST, Total Amount & Thank You -->
+            <div class="totals-calculation-box">
+              <div class="totals-lines-table">
+                <div class="total-row">
+                  <span class="total-label" contenteditable="true" spellcheck="false">Sub Total</span>
+                  <span class="total-val">
+                    <span class="currency-label">₹</span> <span id="displaySubTotal">1,860.00</span>
+                  </span>
+                </div>
+
+                <div class="total-row" id="discountRow">
+                  <span class="total-label" contenteditable="true" spellcheck="false">Discount</span>
+                  <span class="total-val">
+                    <span class="currency-label">₹</span> <span id="displayDiscount">0.00</span>
+                  </span>
+                </div>
+
+                <div class="total-row" id="gstRow">
+                  <span class="total-label">
+                    <span contenteditable="true" spellcheck="false">GST</span> (<span id="displayGstRate">0</span>%)
+                  </span>
+                  <span class="total-val">
+                    <span class="currency-label">₹</span> <span id="displayGstAmount">0.00</span>
+                  </span>
+                </div>
+
+                <!-- Total Amount Banner -->
+                <div class="total-amount-banner">
+                  <span class="total-banner-label" contenteditable="true" spellcheck="false">Total Amount</span>
+                  <span class="total-banner-val">
+                    <span class="currency-label">₹</span> <span id="displayGrandTotal">1,860.00</span>
+                  </span>
+                </div>
+              </div>
+
+              <!-- Thank You Callout (Dark Maroon Script + Bold Subtitle) -->
+              <div class="thank-you-signature-wrap" id="thankYouSection">
+                <div class="thank-you-callout">
+                  <div class="thank-you-script" contenteditable="true" spellcheck="false">Thank You!</div>
+                  <div class="thank-you-sub" contenteditable="true" spellcheck="false">FOR YOUR TRUST</div>
+                </div>
+
+                <div class="signature-box" id="signatureContainer">
+                  <div class="signature-preview-wrap interactive-zone" id="sigPreviewWrapper" title="Click to draw or upload signature">
+                    <div class="hover-overlay no-print"><i class="fa-solid fa-pen"></i> Sign / Upload</div>
+                    <img id="sigImage" src="" alt="Authorized Signature" style="display:none;">
+                    <div class="sig-placeholder" id="sigPlaceholder">
+                      <i class="fa-solid fa-signature"></i>
+                      <span>Signature</span>
+                    </div>
+                  </div>
+                  <div class="signatory-label" contenteditable="true" spellcheck="false">Authorized Signatory</div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- 7. PRE-FOOTER BANNER WITH SLANTED MAROON WEDGE -->
+          <div class="inv-prefooter-banner" id="apparelBanner">
+            <div class="prefooter-dark-badge">
+              <span class="badge-line1" contenteditable="true" spellcheck="false">CUSTOM APPAREL</span>
+              <span class="badge-line2" contenteditable="true" spellcheck="false">FOR YOUR</span>
+              <span class="badge-line3" contenteditable="true" spellcheck="false">BRAND &amp; BUSINESS</span>
+            </div>
+
+            <div class="prefooter-slanted-wedge"></div>
+
+            <div class="prefooter-services-row">
+              <div class="pf-service-item">
+                <div class="pf-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                    <path d="M20.38 3.46L16 2a4 4 0 01-8 0L3.62 3.46a2 2 0 00-1.34 2.23l.58 3.47a1 1 0 00.99.84H6v10a2 2 0 002 2h8a2 2 0 002-2V10h2.15a1 1 0 00.99-.84l.58-3.47a2 2 0 00-1.34-2.23z"/>
+                  </svg>
+                </div>
+                <span contenteditable="true" spellcheck="false">T-SHIRTS</span>
+              </div>
+
+              <div class="pf-divider"></div>
+
+              <div class="pf-service-item">
+                <div class="pf-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                    <path d="M2 15h20M5 15c0-4.97 3.13-9 7-9s7 4.03 7 9M16 15c0 2-2 3-5 3s-9-1-9-3"/>
+                  </svg>
+                </div>
+                <span contenteditable="true" spellcheck="false">CAPS</span>
+              </div>
+
+              <div class="pf-divider"></div>
+
+              <div class="pf-service-item">
+                <div class="pf-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                    <path d="M4 6l4-3 4 3 4-3 4 3v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6z"/>
+                  </svg>
+                </div>
+                <span contenteditable="true" spellcheck="false">HOODIES</span>
+              </div>
+
+              <div class="pf-divider"></div>
+
+              <div class="pf-service-item">
+                <div class="pf-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                    <path d="M12 4a2 2 0 00-2 2c0 1.1.9 2 2 2h1a2 2 0 012 2v1"/>
+                    <path d="M3 13l9-5 9 5v7a2 2 0 01-2 2H5a2 2 0 01-2-2v-7z"/>
+                  </svg>
+                </div>
+                <span contenteditable="true" spellcheck="false">JACKETS</span>
+              </div>
+
+              <div class="pf-divider"></div>
+
+              <div class="pf-service-item">
+                <div class="pf-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                    <rect x="4" y="3" width="16" height="18" rx="2"/>
+                    <line x1="8" y1="8" x2="16" y2="8"/>
+                    <line x1="8" y1="12" x2="16" y2="12"/>
+                  </svg>
+                </div>
+                <span contenteditable="true" spellcheck="false">DTF / DTG</span>
+              </div>
+
+              <div class="pf-divider"></div>
+
+              <div class="pf-service-item">
+                <div class="pf-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                    <circle cx="6" cy="6" r="3"/>
+                    <circle cx="6" cy="18" r="3"/>
+                    <line x1="20" y1="4" x2="8.12" y2="15.88"/>
+                  </svg>
+                </div>
+                <span contenteditable="true" spellcheck="false">EMBROIDERY</span>
+              </div>
+
+              <div class="pf-divider"></div>
+
+              <div class="pf-service-item">
+                <div class="pf-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                    <circle cx="12" cy="12" r="10"/>
+                    <circle cx="12" cy="12" r="6"/>
+                  </svg>
+                </div>
+                <span contenteditable="true" spellcheck="false">CUSTOM PRINTS</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 8. DARK FOOTER BAR -->
+          <footer class="inv-footer">
+            <div class="footer-dark-strip">
+              <div class="footer-col-left">
+                <span class="footer-dot">•</span>
+                <span contenteditable="true" spellcheck="false">RAJ LAKSHMI COMPLEX, KALYANPUR, LUCKNOW.</span>
+              </div>
+
+              <div class="footer-col-center">
+                <div class="contact-line">
+                  <!-- Phone SVG -->
+                  <svg class="footer-icon-svg" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M6.62 10.79a15.053 15.053 0 006.59 6.59l2.2-2.2a1 1 0 011.02-.24c1.12.37 2.33.57 3.57.57a1 1 0 011 1V20a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h3.5a1 1 0 011 1c0 1.25.2 2.45.57 3.57a1 1 0 01-.25 1.02l-2.2 2.2z"/>
+                  </svg>
+                  <span contenteditable="true" spellcheck="false">+91 6387731661</span>
+                </div>
+                <div class="contact-line">
+                  <!-- Instagram SVG -->
+                  <svg class="footer-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+                    <path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/>
+                    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+                  </svg>
+                  <span contenteditable="true" spellcheck="false">@xenmark_</span>
+                </div>
+              </div>
+
+              <div class="footer-col-right">
+                <div class="contact-line">
+                  <!-- GST/Document SVG -->
+                  <svg class="footer-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="18" height="18" rx="2"/>
+                    <line x1="8" y1="8" x2="16" y2="8"/>
+                    <line x1="8" y1="12" x2="16" y2="12"/>
+                    <line x1="8" y1="16" x2="13" y2="16"/>
+                  </svg>
+                  <span>GSTIN : <span contenteditable="true" spellcheck="false">09LLIPK4037P1Z</span></span>
+                </div>
+                <div class="contact-line">
+                  <!-- Globe SVG -->
+                  <svg class="footer-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="2" y1="12" x2="22" y2="12"/>
+                    <path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/>
+                  </svg>
+                  <span contenteditable="true" spellcheck="false">www.xenmark.in</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Deep Maroon Bottom Tagline Bar -->
+            <div class="footer-maroon-bar">
+              <span contenteditable="true" spellcheck="false">GARMENTS &nbsp;&nbsp;|&nbsp;&nbsp; PRINTING &nbsp;&nbsp;|&nbsp;&nbsp; CUSTOMIZATION</span>
+            </div>
+          </footer>
+
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- MODAL: Draw Signature Pad -->
+  <div class="modal-backdrop" id="sigModal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-pen-nib"></i> Draw Digital Signature</h3>
+        <button class="modal-close" id="btnCloseSigModal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-desc">Draw with mouse, stylus, or touch inside the canvas:</p>
+        <div class="canvas-canvas-wrap">
+          <canvas id="signatureCanvas" width="460" height="180"></canvas>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="btnClearSignature">Clear</button>
+        <button class="btn btn-primary" id="btnSaveSignature">Apply Signature</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: UPI QR Generator -->
+  <div class="modal-backdrop" id="qrModal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-qrcode"></i> Generate Dynamic UPI QR</h3>
+        <button class="modal-close" id="btnCloseQrModal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>UPI ID (VPA)</label>
+          <input type="text" id="upiIdInput" class="form-control" value="6387731661@paytm" placeholder="example@okhdfcbank or 9876543210@paytm">
+        </div>
+        <div class="form-group">
+          <label>Payee Name / Business Name</label>
+          <input type="text" id="upiNameInput" class="form-control" value="XENMARK GARMENTS" placeholder="Business Name">
+        </div>
+        <div class="form-group">
+          <label class="toggle-control">
+            <input type="checkbox" id="upiIncludeAmount" checked>
+            <span class="toggle-slider"></span>
+            <span>Link invoice total amount (<span class="currency-label">₹</span> <span id="modalGrandTotal">1,860.00</span>)</span>
+          </label>
+        </div>
+        <div class="qr-preview-box">
+          <div id="modalQrPreview"></div>
+          <p class="mt-2 text-muted" style="font-size: 11.5px;">Scannable directly with Google Pay, PhonePe, Paytm, and BHIM.</p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="btnCancelQrModal">Cancel</button>
+        <button class="btn btn-primary" id="btnApplyUpiQr">Apply to Invoice</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="app.js?v=2.1"></script>
+</body>
+</html>

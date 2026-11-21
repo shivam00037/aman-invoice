@@ -1,0 +1,1875 @@
+/* ==========================================================================
+   XENMARK OFFICIAL INVOICE - 1:1 REPLICA MATCHING REFERENCE IMAGE 1
+   Tight, cohesive layout with zero awkward gaps and exact proportions
+   ========================================================================== */
+
+:root {
+  --primary-color: #600c1e;
+  --primary-dark: #3a050f;
+  --primary-light: #7a1228;
+  --primary-subtle: #fcf2f4;
+  --dark-black: #0c1017;
+  --dark-text: #111822;
+  --light-gray-border: #d0d5dd;
+  --table-border: #d5d9e0;
+  
+  --font-base: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-script: 'Great Vibes', cursive;
+}
+
+/* Reset */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-base);
+  background-color: #e9eef5;
+  color: var(--dark-text);
+  line-height: 1.35;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ==========================================================================
+   APP HEADER (TOOLS & CONTROLS)
+   ========================================================================== */
+.app-header {
+  height: 56px;
+  background: #ffffff;
+  border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.app-logo {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--primary-color);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.status-indicator {
+  font-size: 11.5px;
+  color: #10b981;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: #ecfdf5;
+  padding: 3px 9px;
+  border-radius: 20px;
+  font-weight: 600;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.page-mode-pill-wrap {
+  display: flex;
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  padding: 2px;
+  gap: 2px;
+}
+
+.mode-pill {
+  font-family: inherit;
+  font-size: 11.5px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 4px;
+  border: none;
+  background: transparent;
+  color: #475569;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  transition: all 0.15s ease;
+}
+
+.mode-pill.active {
+  background: var(--primary-color);
+  color: #ffffff;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-family: inherit;
+  font-size: 12.5px;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.btn-primary {
+  background: var(--primary-color);
+  color: #ffffff;
+}
+
+.btn-primary:hover {
+  background: var(--primary-light);
+}
+
+.btn-secondary {
+  background: #f8fafc;
+  color: #334155;
+  border-color: #cbd5e1;
+}
+
+.btn-secondary:hover {
+  background: #f1f5f9;
+}
+
+.btn-sm {
+  padding: 4px 8px;
+  font-size: 11px;
+}
+
+.btn-block {
+  width: 100%;
+}
+
+.dropdown {
+  position: relative;
+}
+
+.dropdown-menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 6px);
+  width: 260px;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15);
+  border: 1px solid #e2e8f0;
+  padding: 6px;
+  display: none;
+  flex-direction: column;
+  gap: 3px;
+  z-index: 1200;
+}
+
+.dropdown.active .dropdown-menu {
+  display: flex;
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  text-align: left;
+  cursor: pointer;
+  width: 100%;
+}
+
+.dropdown-item:hover {
+  background: #f8fafc;
+}
+
+.dropdown-item i {
+  font-size: 18px;
+  width: 22px;
+  text-align: center;
+}
+
+.dropdown-item strong {
+  display: block;
+  font-size: 12px;
+  color: #1e293b;
+}
+
+.dropdown-item small {
+  display: block;
+  font-size: 10.5px;
+  color: #64748b;
+}
+
+.text-danger { color: #ef4444; }
+.text-success { color: #10b981; }
+.text-primary { color: #3b82f6; }
+.text-accent { color: var(--primary-color); }
+
+/* ==========================================================================
+   WORKSPACE & SIDEBAR
+   ========================================================================== */
+.workspace-wrapper {
+  display: flex;
+  flex: 1;
+  height: calc(100vh - 56px);
+  position: relative;
+  overflow: hidden;
+}
+
+.sidebar-panel {
+  width: 360px;
+  background: #ffffff;
+  border-right: 1px solid #e2e8f0;
+  display: flex;
+  flex-direction: column;
+  z-index: 900;
+  transition: margin-left 0.2s ease;
+  flex-shrink: 0;
+}
+
+.sidebar-panel.collapsed {
+  margin-left: -360px;
+}
+
+.sidebar-header {
+  padding: 14px 18px;
+  border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sidebar-header h3 {
+  font-size: 14px;
+  font-weight: 700;
+  color: #1e293b;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.close-sidebar-btn {
+  background: none;
+  border: none;
+  font-size: 22px;
+  color: #94a3b8;
+  cursor: pointer;
+}
+
+.sidebar-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.sidebar-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.sidebar-section:last-child {
+  border-bottom: none;
+}
+
+.section-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: #334155;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  text-transform: uppercase;
+}
+
+.section-subtitle {
+  font-size: 11px;
+  color: #64748b;
+}
+
+.sidebar-card-box {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  padding: 8px 10px;
+}
+
+.sidebar-card-box .control-label {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #334155;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-group-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.quick-add-form {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.form-group label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #475569;
+}
+
+.form-control {
+  font-family: inherit;
+  font-size: 12px;
+  padding: 6px 8px;
+  border-radius: 4px;
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
+  color: #1e293b;
+  outline: none;
+}
+
+.form-row-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.preset-items-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5px;
+}
+
+.preset-btn {
+  font-family: inherit;
+  font-size: 10.5px;
+  font-weight: 600;
+  padding: 5px 6px;
+  border-radius: 4px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  color: #334155;
+  text-align: left;
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.preset-btn:hover {
+  background: var(--primary-subtle);
+  color: var(--primary-color);
+}
+
+.input-with-select {
+  display: flex;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.input-with-select input {
+  border: none;
+  flex: 1;
+  padding: 6px 8px;
+  font-size: 12px;
+  outline: none;
+}
+
+.input-with-select select {
+  border: none;
+  border-left: 1px solid #cbd5e1;
+  background: #f8fafc;
+  font-size: 11px;
+  padding: 0 6px;
+  outline: none;
+}
+
+/* ==========================================================================
+   CANVAS VIEWPORT & TOOLBAR
+   ========================================================================== */
+.canvas-viewport {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  align-items: center;
+  padding: 16px 20px 40px;
+  background: #eaeff5;
+  background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+.canvas-toolbar {
+  width: 100%;
+  max-width: 800px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #ffffff;
+  padding: 6px 14px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+  border: 1px solid #e2e8f0;
+}
+
+.toolbar-hint {
+  font-size: 11.5px;
+  color: #475569;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.toolbar-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.page-fit-indicator {
+  font-size: 11px;
+  font-weight: 700;
+  color: #065f46;
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  padding: 3px 8px;
+  border-radius: 12px;
+}
+
+.btn-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+  border: 1px solid #cbd5e1;
+  background: #f8fafc;
+  color: #475569;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+}
+
+#zoomLevelText {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #475569;
+  min-width: 36px;
+  text-align: center;
+}
+
+.page-overflow-banner {
+  width: 100%;
+  max-width: 800px;
+  margin-bottom: 10px;
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  border-radius: 6px;
+  padding: 6px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.notice-text {
+  font-size: 11.5px;
+  color: #92400e;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.invoice-container-outer {
+  transform-origin: top center;
+  transition: transform 0.15s ease;
+}
+
+/* ==========================================================================
+   THE INVOICE PAPER (1:1 PIXEL-PERFECT CLONE OF IMAGE 1)
+   No huge gaps, natural proportions, exact padding
+   ========================================================================== */
+.invoice-paper, #invoicePaper {
+  width: 800px;
+  background: #ffffff;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  border-radius: 2px;
+  padding: 22px 28px 16px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  box-sizing: border-box;
+}
+
+.interactive-zone {
+  position: relative;
+  cursor: pointer;
+}
+
+.interactive-zone .hover-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(96, 12, 30, 0.85);
+  color: #ffffff;
+  font-size: 9.5px;
+  font-weight: 700;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  border-radius: 4px;
+  z-index: 10;
+}
+
+.interactive-zone:hover .hover-overlay {
+  display: flex;
+}
+
+[contenteditable="true"] {
+  outline: none;
+  cursor: text;
+}
+
+[contenteditable="true"]:hover {
+  outline: 1px dashed rgba(96, 12, 30, 0.35);
+}
+
+[contenteditable="true"]:focus {
+  outline: 1.5px solid #600c1e;
+  background-color: #ffffff;
+}
+
+/* --------------------------------------------------------------------------
+   1. TOP HEADER SECTION
+   -------------------------------------------------------------------------- */
+.inv-top-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding-bottom: 12px;
+}
+
+.inv-brand-box {
+  width: 250px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+}
+
+.logo-wrapper {
+  display: flex;
+  align-items: center;
+  padding: 2px;
+}
+
+.default-xenmark-logo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.xenmark-svg {
+  width: 135px;
+  height: 52px;
+}
+
+.logo-text-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 1px;
+}
+
+.logo-name {
+  font-family: 'Inter', sans-serif;
+  font-size: 24px;
+  font-weight: 900;
+  letter-spacing: 2.5px;
+  color: #0c1017;
+  line-height: 1.1;
+}
+
+.logo-tagline {
+  font-size: 8px;
+  font-weight: 600;
+  color: #475569;
+  letter-spacing: 0.6px;
+  margin-top: 2px;
+  white-space: nowrap;
+}
+
+.user-uploaded-logo {
+  max-width: 230px;
+  max-height: 80px;
+  object-fit: contain;
+  display: block;
+}
+
+.inv-header-divider {
+  width: 2px;
+  height: 84px;
+  background-color: #600c1e;
+  flex-shrink: 0;
+}
+
+.inv-header-services {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.services-headline {
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+  color: #111822;
+  margin-bottom: 2px;
+}
+
+.services-subline {
+  font-size: 10px;
+  font-weight: 700;
+  color: #334155;
+  letter-spacing: 1.5px;
+}
+
+.services-subline.secondary {
+  margin-top: 2px;
+  font-size: 9.5px;
+}
+
+.top-service-icons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 8px;
+}
+
+.service-icon-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: 44px;
+}
+
+.svc-divider {
+  width: 1px;
+  height: 28px;
+  background-color: #d1d5db;
+  margin: 0 4px;
+}
+
+.icon-circle {
+  width: 24px;
+  height: 24px;
+  color: #600c1e;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 3px;
+}
+
+.icon-circle svg {
+  width: 15px;
+  height: 15px;
+}
+
+.service-icon-item span {
+  font-size: 7px;
+  font-weight: 700;
+  color: #111822;
+  line-height: 1.1;
+  letter-spacing: 0.3px;
+}
+
+/* --------------------------------------------------------------------------
+   2. MAROON "INVOICE" TITLE BANNER
+   -------------------------------------------------------------------------- */
+.inv-title-banner {
+  background-color: #600c1e;
+  border-radius: 4px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 10px 0 12px;
+  position: relative;
+  overflow: visible;
+}
+
+.banner-title-text {
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  color: #ffffff;
+  padding-left: 20px;
+}
+
+/* Slanted dark wedge on right matching Image 1 */
+.banner-slanted-badge {
+  background-color: #3a050f;
+  height: 100%;
+  padding: 4px 22px 4px 30px;
+  display: flex;
+  align-items: center;
+  position: relative;
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+}
+
+.banner-slanted-badge::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -20px;
+  width: 0;
+  height: 0;
+  border-bottom: 48px solid #3a050f;
+  border-left: 20px solid transparent;
+}
+
+.banner-meta-grid {
+  display: grid;
+  grid-template-columns: 75px auto;
+  column-gap: 16px;
+  row-gap: 2px;
+  font-size: 10.5px;
+  color: #ffffff;
+}
+
+.banner-meta-grid .meta-label {
+  font-weight: 500;
+  color: #f1d7dc;
+}
+
+.banner-meta-grid .meta-val {
+  font-weight: 700;
+  color: #ffffff;
+  text-align: right;
+}
+
+/* --------------------------------------------------------------------------
+   3. BILL TO & BILL BY BOXES (MATCHING IMAGE 1 WITH MAROON BADGES)
+   -------------------------------------------------------------------------- */
+.inv-parties-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 10px;
+}
+
+.party-box {
+  border: 1px solid var(--light-gray-border);
+  border-radius: 6px;
+  overflow: hidden;
+  background: #ffffff;
+}
+
+.party-box-header {
+  border-bottom: 1px solid #e5e7eb;
+  padding: 6px 10px;
+  display: flex;
+  align-items: center;
+  background: #ffffff;
+}
+
+/* Iconic Maroon Pill Badge from Image 1 */
+.party-badge-pill {
+  background-color: #600c1e !important;
+  color: #ffffff !important;
+  padding: 3px 10px;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.6px;
+}
+
+.pill-dot {
+  color: #ffffff;
+  font-size: 8px;
+  display: inline-block;
+  line-height: 1;
+}
+
+.header-grid-svg {
+  width: 11px;
+  height: 11px;
+  color: #ffffff;
+}
+
+.party-box-body {
+  padding: 8px 12px 10px;
+}
+
+.party-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 10.5px;
+}
+
+.party-table td {
+  padding: 2.5px 0;
+  vertical-align: top;
+}
+
+.party-table .lbl {
+  width: 90px;
+  color: #334155;
+  font-weight: 600;
+}
+
+.party-table .sep {
+  width: 14px;
+  color: #64748b;
+  font-weight: 600;
+  text-align: center;
+}
+
+.party-table .val {
+  color: #0f172a;
+  font-weight: 700;
+  word-break: break-word;
+}
+
+/* --------------------------------------------------------------------------
+   4. FOUR HORIZONTAL META BOXES
+   -------------------------------------------------------------------------- */
+.inv-meta-cards-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.meta-card {
+  border: 1px solid var(--light-gray-border);
+  border-radius: 6px;
+  padding: 6px 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #ffffff;
+}
+
+.meta-svg {
+  width: 16px;
+  height: 16px;
+  color: #600c1e;
+  flex-shrink: 0;
+}
+
+.meta-card-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.meta-card-label {
+  font-size: 9px;
+  font-weight: 600;
+  color: #475569;
+}
+
+.meta-card-value {
+  font-size: 11px;
+  font-weight: 800;
+  color: #0f172a;
+  margin-top: 1px;
+}
+
+/* --------------------------------------------------------------------------
+   5. ITEMS TABLE (SPREADSHEET GRID WITH HORIZONTAL & VERTICAL BORDERS)
+   -------------------------------------------------------------------------- */
+.inv-table-wrapper {
+  margin-bottom: 10px;
+}
+
+.inv-items-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 10.5px;
+  border: 1px solid var(--table-border);
+}
+
+.inv-items-table thead tr {
+  background-color: #600c1e;
+  color: #ffffff;
+}
+
+.inv-items-table th {
+  padding: 7px 8px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  font-size: 10.5px;
+  border: 1px solid #600c1e;
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.inv-items-table th:last-child {
+  border-right: 1px solid #600c1e;
+}
+
+.inv-items-table th.col-sno { width: 50px; text-align: center; }
+.inv-items-table th.col-desc { text-align: left; }
+.inv-items-table th.col-qty { width: 85px; text-align: center; }
+.inv-items-table th.col-rate { width: 125px; text-align: center; }
+.inv-items-table th.col-amount { width: 130px; text-align: right; }
+.inv-items-table th.col-actions { width: 55px; text-align: center; }
+
+.inv-items-table td {
+  padding: 6px 8px;
+  vertical-align: middle;
+  border: 1px solid var(--table-border);
+}
+
+.col-sno { font-weight: 700; color: #475569; }
+.col-desc .item-name { font-weight: 700; color: #111822; }
+
+.qty-input, .rate-input {
+  font-family: inherit;
+  font-size: 10.5px;
+  font-weight: 700;
+  text-align: center;
+  border: 1px solid transparent;
+  background: transparent;
+  padding: 2px 4px;
+  width: 60px;
+  border-radius: 4px;
+  outline: none;
+}
+
+.qty-input:hover, .rate-input:hover {
+  border-color: #cbd5e1;
+  background: #ffffff;
+}
+
+.qty-input:focus, .rate-input:focus {
+  border-color: #600c1e;
+  background: #ffffff;
+}
+
+.rate-wrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+}
+
+.row-amount-text {
+  font-weight: 800;
+  color: #111822;
+}
+
+.row-actions-group {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.row-btn-action {
+  background: none;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: 3px 4px;
+  border-radius: 4px;
+  font-size: 10.5px;
+}
+
+.row-btn-action:hover {
+  color: #600c1e;
+}
+
+.row-btn-delete:hover {
+  color: #ef4444;
+}
+
+.table-add-row-bar {
+  margin-top: 6px;
+  display: flex;
+  justify-content: flex-start;
+}
+
+/* --------------------------------------------------------------------------
+   6. LOWER SECTION: PAYMENT (LEFT) & TOTALS (RIGHT)
+   -------------------------------------------------------------------------- */
+.inv-lower-section {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.payment-details-box {
+  border: 1px solid var(--light-gray-border);
+  border-radius: 6px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.payment-header-bar {
+  background-color: #600c1e;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  padding: 4px 12px;
+}
+
+.payment-body-row {
+  display: flex;
+  padding: 8px 10px;
+  gap: 10px;
+  background: #ffffff;
+  flex: 1;
+}
+
+.qr-code-card {
+  border: 1px solid var(--light-gray-border);
+  border-radius: 6px;
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: 135px;
+  flex-shrink: 0;
+  background: #ffffff;
+}
+
+.qr-badge-header {
+  font-size: 10px;
+  font-weight: 800;
+  color: #581c87;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 3px;
+}
+
+.phonepe-circle {
+  width: 14px;
+  height: 14px;
+  background: #581c87;
+  color: #ffffff;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 8px;
+  font-weight: bold;
+}
+
+.qr-canvas-wrapper {
+  width: 108px;
+  height: 108px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #f1f5f9;
+  border-radius: 4px;
+  overflow: hidden;
+  background: #ffffff;
+}
+
+#dynamicQrCanvas canvas, #dynamicQrCanvas img {
+  width: 106px !important;
+  height: 106px !important;
+  display: block;
+}
+
+.qr-footer-text {
+  display: flex;
+  flex-direction: column;
+  margin-top: 3px;
+}
+
+.qr-footer-text strong {
+  font-size: 9px;
+  color: #111822;
+}
+
+.qr-footer-text span {
+  font-size: 7.5px;
+  color: #475569;
+}
+
+.payment-instructions-card {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.instructions-header-bar {
+  background-color: #600c1e;
+  color: #ffffff;
+  font-size: 9px;
+  font-weight: 700;
+  text-align: center;
+  padding: 3px 6px;
+  border-radius: 3px;
+  margin-bottom: 6px;
+  letter-spacing: 0.3px;
+}
+
+.instructions-list {
+  list-style: none;
+  font-size: 8.5px;
+  color: #334155;
+  line-height: 1.35;
+  margin-bottom: 6px;
+}
+
+.instructions-list li {
+  margin-bottom: 2px;
+}
+
+.payment-status-badge {
+  background: #fce8eb;
+  color: #871c32;
+  border: 1px solid #f8ccd5;
+  border-radius: 3px;
+  padding: 3px 6px;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+}
+
+.payment-status-badge.status-paid {
+  background: #ecfdf5;
+  color: #065f46;
+  border-color: #a7f3d0;
+}
+
+.payment-amounts-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 9px;
+  margin-top: auto;
+}
+
+.amount-line {
+  display: flex;
+  justify-content: space-between;
+  color: #475569;
+}
+
+.amount-line.highlight-due {
+  color: #111822;
+  font-weight: 700;
+}
+
+/* Right: Totals Calculation */
+.totals-calculation-box {
+  display: flex;
+  flex-direction: column;
+}
+
+.totals-lines-table {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 4px;
+}
+
+.total-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 3px 4px;
+  font-size: 10.5px;
+}
+
+.total-label {
+  font-weight: 600;
+  color: #334155;
+}
+
+.total-val {
+  font-weight: 800;
+  color: #111822;
+}
+
+.total-amount-banner {
+  background-color: #600c1e;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 12px;
+  border-radius: 4px;
+  margin-top: 4px;
+}
+
+.total-banner-label {
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.total-banner-val {
+  font-size: 14.5px;
+  font-weight: 900;
+}
+
+/* Thank You Callout (Exact match to Image 1) */
+.thank-you-signature-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 4px 4px;
+}
+
+.thank-you-callout {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.thank-you-script {
+  font-family: var(--font-script);
+  font-size: 38px;
+  color: #600c1e;
+  line-height: 1;
+}
+
+.thank-you-sub {
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  color: #111822;
+  margin-top: 2px;
+}
+
+.signature-box {
+  display: none;
+}
+
+/* --------------------------------------------------------------------------
+   7. PRE-FOOTER BANNER WITH SLANTED MAROON WEDGE
+   -------------------------------------------------------------------------- */
+.inv-prefooter-banner {
+  border: 1px solid var(--light-gray-border);
+  border-radius: 4px;
+  display: flex;
+  align-items: stretch;
+  overflow: hidden;
+  margin-bottom: 10px;
+  height: 48px;
+}
+
+.prefooter-dark-badge {
+  background: var(--dark-black);
+  color: #ffffff;
+  padding: 6px 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  font-size: 9.5px;
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: 0.4px;
+  flex-shrink: 0;
+}
+
+.prefooter-slanted-wedge {
+  width: 0;
+  height: 0;
+  border-bottom: 48px solid #600c1e;
+  border-left: 20px solid var(--dark-black);
+  flex-shrink: 0;
+}
+
+.prefooter-services-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  flex: 1;
+  padding: 0 4px;
+  background: #ffffff;
+}
+
+.pf-service-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 2px;
+  width: 44px;
+}
+
+.pf-divider {
+  width: 1px;
+  height: 24px;
+  background-color: #e5e7eb;
+}
+
+.pf-icon {
+  color: #600c1e;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pf-icon svg {
+  width: 15px;
+  height: 15px;
+}
+
+.pf-service-item span {
+  font-size: 7px;
+  font-weight: 700;
+  color: #111822;
+  letter-spacing: 0.3px;
+}
+
+/* --------------------------------------------------------------------------
+   8. FOOTER (SITS DIRECTLY BENEATH PRE-FOOTER WITHOUT GIANT GAP!)
+   -------------------------------------------------------------------------- */
+.inv-footer {
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.footer-dark-strip {
+  background: var(--dark-black);
+  color: #ffffff;
+  padding: 7px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 9px;
+  font-weight: 600;
+  gap: 12px;
+}
+
+.footer-col-left {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.footer-dot {
+  color: #ffffff;
+  font-size: 13px;
+}
+
+.footer-col-center, .footer-col-right {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.contact-line {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.footer-icon-svg {
+  width: 10px;
+  height: 10px;
+  color: #cbd5e1;
+}
+
+.footer-maroon-bar {
+  background-color: #600c1e;
+  color: #ffffff;
+  text-align: center;
+  padding: 4px 0;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+
+/* ==========================================================================
+   COMPACT MODE (ACTIVATES FOR 6+ ITEMS TO PREVENT MULTI-PAGE EXPANSION)
+   ========================================================================== */
+.invoice-paper.compact-mode {
+  padding: 14px 22px 10px;
+}
+
+.invoice-paper.compact-mode .inv-top-header {
+  padding-bottom: 6px;
+}
+
+.invoice-paper.compact-mode .xenmark-svg {
+  width: 110px;
+  height: 42px;
+}
+
+.invoice-paper.compact-mode .logo-name {
+  font-size: 20px;
+}
+
+.invoice-paper.compact-mode .services-headline {
+  font-size: 12px;
+}
+
+.invoice-paper.compact-mode .services-subline {
+  font-size: 8px;
+}
+
+.invoice-paper.compact-mode .top-service-icons {
+  margin-top: 4px;
+}
+
+.invoice-paper.compact-mode .icon-circle {
+  width: 18px;
+  height: 18px;
+}
+
+.invoice-paper.compact-mode .icon-circle svg {
+  width: 12px;
+  height: 12px;
+}
+
+.invoice-paper.compact-mode .service-icon-item span {
+  font-size: 6px;
+}
+
+.invoice-paper.compact-mode .inv-title-banner {
+  height: 38px;
+  margin: 6px 0 8px;
+}
+
+.invoice-paper.compact-mode .banner-title-text {
+  font-size: 22px;
+}
+
+.invoice-paper.compact-mode .banner-slanted-badge {
+  padding: 2px 18px 2px 22px;
+}
+
+.invoice-paper.compact-mode .banner-slanted-badge::before {
+  left: -15px;
+  border-bottom: 38px solid #3a050f;
+  border-left: 15px solid transparent;
+}
+
+.invoice-paper.compact-mode .banner-meta-grid {
+  font-size: 9px;
+}
+
+.invoice-paper.compact-mode .inv-parties-row {
+  margin-bottom: 6px;
+  gap: 8px;
+}
+
+.invoice-paper.compact-mode .party-box-header {
+  padding: 3px 6px;
+}
+
+.invoice-paper.compact-mode .party-badge-pill {
+  padding: 2px 7px;
+  font-size: 9px;
+  border-radius: 3px;
+}
+
+.invoice-paper.compact-mode .party-box-body {
+  padding: 4px 8px;
+}
+
+.invoice-paper.compact-mode .party-table {
+  font-size: 9px;
+}
+
+.invoice-paper.compact-mode .party-table td {
+  padding: 1px 0;
+}
+
+.invoice-paper.compact-mode .inv-meta-cards-row {
+  margin-bottom: 6px;
+  gap: 6px;
+}
+
+.invoice-paper.compact-mode .meta-card {
+  padding: 4px 6px;
+}
+
+.invoice-paper.compact-mode .meta-card-label {
+  font-size: 8px;
+}
+
+.invoice-paper.compact-mode .meta-card-value {
+  font-size: 9.5px;
+}
+
+.invoice-paper.compact-mode .inv-table-wrapper {
+  margin-bottom: 6px;
+}
+
+.invoice-paper.compact-mode .inv-items-table {
+  font-size: 9px;
+}
+
+.invoice-paper.compact-mode .inv-items-table th {
+  padding: 4px 6px;
+  font-size: 9px;
+}
+
+.invoice-paper.compact-mode .inv-items-table td {
+  padding: 3px 6px;
+}
+
+.invoice-paper.compact-mode .qty-input,
+.invoice-paper.compact-mode .rate-input {
+  font-size: 9px;
+  padding: 1px 2px;
+  width: 50px;
+}
+
+.invoice-paper.compact-mode .inv-lower-section {
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.invoice-paper.compact-mode .payment-body-row {
+  padding: 5px 6px;
+  gap: 6px;
+}
+
+.invoice-paper.compact-mode .qr-code-card {
+  width: 105px;
+  padding: 3px;
+}
+
+.invoice-paper.compact-mode .qr-canvas-wrapper {
+  width: 80px;
+  height: 80px;
+}
+
+.invoice-paper.compact-mode #dynamicQrCanvas canvas,
+.invoice-paper.compact-mode #dynamicQrCanvas img {
+  width: 78px !important;
+  height: 78px !important;
+}
+
+.invoice-paper.compact-mode .instructions-header-bar {
+  font-size: 8px;
+  padding: 2px 4px;
+}
+
+.invoice-paper.compact-mode .instructions-list {
+  font-size: 7.5px;
+  margin-bottom: 3px;
+}
+
+.invoice-paper.compact-mode .payment-status-badge {
+  padding: 2px 4px;
+  font-size: 8px;
+  margin-bottom: 3px;
+}
+
+.invoice-paper.compact-mode .total-row {
+  padding: 1.5px 3px;
+  font-size: 9px;
+}
+
+.invoice-paper.compact-mode .total-amount-banner {
+  padding: 4px 8px;
+  margin-top: 2px;
+}
+
+.invoice-paper.compact-mode .total-banner-label {
+  font-size: 11px;
+}
+
+.invoice-paper.compact-mode .total-banner-val {
+  font-size: 12.5px;
+}
+
+.invoice-paper.compact-mode .thank-you-script {
+  font-size: 26px;
+}
+
+.invoice-paper.compact-mode .thank-you-sub {
+  font-size: 7px;
+}
+
+.invoice-paper.compact-mode .inv-prefooter-banner {
+  height: 36px;
+  margin-bottom: 6px;
+}
+
+.invoice-paper.compact-mode .prefooter-dark-badge {
+  font-size: 7.5px;
+  padding: 3px 8px;
+}
+
+.invoice-paper.compact-mode .prefooter-slanted-wedge {
+  border-bottom-width: 36px;
+  border-left-width: 15px;
+}
+
+.invoice-paper.compact-mode .pf-icon svg {
+  width: 12px;
+  height: 12px;
+}
+
+.invoice-paper.compact-mode .pf-service-item span {
+  font-size: 6px;
+}
+
+.invoice-paper.compact-mode .footer-dark-strip {
+  padding: 5px 8px;
+  font-size: 8px;
+}
+
+.invoice-paper.compact-mode .footer-maroon-bar {
+  padding: 2.5px 0;
+  font-size: 8px;
+}
+
+/* ==========================================================================
+   MODALS
+   ========================================================================== */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(4px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  animation: fadeIn 0.15s ease-out;
+}
+
+.modal-backdrop.active {
+  display: flex;
+}
+
+.modal-dialog {
+  background: #ffffff;
+  border-radius: 10px;
+  width: 100%;
+  max-width: 480px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+  border: 1px solid #e2e8f0;
+  overflow: hidden;
+}
+
+.modal-header {
+  padding: 14px 18px;
+  border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.modal-header h3 {
+  font-size: 14.5px;
+  font-weight: 700;
+  color: #1e293b;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 22px;
+  color: #94a3b8;
+  cursor: pointer;
+}
+
+.modal-body {
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.modal-desc {
+  font-size: 12px;
+  color: #64748b;
+}
+
+.canvas-canvas-wrap {
+  border: 1.5px dashed #cbd5e1;
+  border-radius: 6px;
+  background: #f8fafc;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: crosshair;
+}
+
+#signatureCanvas {
+  display: block;
+}
+
+.qr-preview-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  background: #f8fafc;
+  border-radius: 6px;
+  border: 1px solid #e2e8f0;
+}
+
+.modal-footer {
+  padding: 12px 18px;
+  border-top: 1px solid #e2e8f0;
+  background: #f8fafc;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+/* ==========================================================================
+   TOAST NOTIFICATIONS
+   ========================================================================== */
+.toast-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  z-index: 3000;
+  pointer-events: none;
+}
+
+.toast {
+  background: #1e293b;
+  color: #ffffff;
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
+  animation: slideInUp 0.2s ease-out;
+  pointer-events: auto;
+}
+
+.toast.toast-success { background: #065f46; }
+.toast.toast-error { background: #991b1b; }
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideInUp {
+  from { transform: translateY(12px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* ==========================================================================
+   PRINT STYLES
+   ========================================================================== */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 4mm;
+  }
+
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  .workspace-wrapper {
+    height: auto !important;
+    overflow: visible !important;
+    display: block !important;
+  }
+
+  .canvas-viewport {
+    padding: 0 !important;
+    background: none !important;
+    overflow: visible !important;
+    display: block !important;
+  }
+
+  .invoice-container-outer {
+    transform: none !important;
+  }
+
+  .invoice-paper {
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    padding: 6mm 8mm !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  [contenteditable="true"]:hover,
+  [contenteditable="true"]:focus {
+    outline: none !important;
+    background: transparent !important;
+  }
+
+  .qty-input, .rate-input {
+    border: none !important;
+    background: transparent !important;
+  }
+}
