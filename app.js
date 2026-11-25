@@ -192,14 +192,15 @@
         const name = row.querySelector('.item-name').textContent.trim();
         const qty = parseFloat(row.querySelector('.qty-input').value) || 1;
         const rate = parseFloat(row.querySelector('.rate-input').value) || 0;
-        addItemRow(name, qty, rate);
+        const gstRate = parseFloat(row.querySelector('.gst-input').value) || 0;
+        addItemRow(name, qty, rate, gstRate);
         showToast(`Duplicated ${name}`, 'success');
       }
     });
 
     // Live calculation on quantity or rate input
     getTableBody().addEventListener('input', (e) => {
-      if (e.target.classList.contains('qty-input') || e.target.classList.contains('rate-input')) {
+      if (e.target.classList.contains('qty-input') || e.target.classList.contains('rate-input') || e.target.classList.contains('gst-input')) {
         calculateAll();
       }
     });
@@ -423,12 +424,12 @@
     const tbody = getTableBody();
     tbody.innerHTML = '';
     state.items.forEach(item => {
-      appendItemRowToDOM(item.name, item.qty, item.rate);
+      appendItemRowToDOM(item.name, item.qty, item.rate, item.gstRate ?? 0);
     });
   }
 
-  function addItemRow(name = 'NEW APPAREL ITEM', qty = 1, rate = 100.00) {
-    appendItemRowToDOM(name, qty, rate);
+  function addItemRow(name = 'NEW APPAREL ITEM', qty = 1, rate = 100.00, gstRate = 0) {
+    appendItemRowToDOM(name, qty, rate, gstRate);
     calculateAll();
     updatePageModeView();
 
@@ -439,11 +440,12 @@
     }
   }
 
-  function appendItemRowToDOM(name, qty, rate) {
+  function appendItemRowToDOM(name, qty, rate, gstRate = 0) {
     const tbody = getTableBody();
     const tr = document.createElement('tr');
     tr.className = 'item-row';
     const amount = (parseFloat(qty) || 0) * (parseFloat(rate) || 0);
+    const totalWithGst = amount * (1 + (parseFloat(gstRate) || 0) / 100);
 
     tr.innerHTML = `
       <td class="col-sno text-center"><span class="row-sno"></span></td>
@@ -459,9 +461,16 @@
           <input type="number" class="rate-input" value="${Number(rate).toFixed(2)}" min="0" step="any">
         </div>
       </td>
+      <td class="col-gst text-center">
+        <input type="number" class="gst-input" value="${Number(gstRate) || 0}" min="0" max="100" step="any" aria-label="GST percentage">
+      </td>
       <td class="col-amount text-right">
         <span class="currency-label">${state.currency}</span>
         <span class="row-amount-text">${formatMoney(amount)}</span>
+      </td>
+      <td class="col-total-gst text-right">
+        <span class="currency-label">${state.currency}</span>
+        <span class="row-total-gst-text">${formatMoney(totalWithGst)}</span>
       </td>
       <td class="col-actions text-center no-print">
         <div class="row-actions-group">
@@ -487,6 +496,7 @@
 
   function calculateAll() {
     let subtotal = 0;
+    let gstAmount = 0;
     const rows = getTableBody().querySelectorAll('.item-row');
     const updatedItems = [];
 
@@ -494,46 +504,35 @@
       const sno = row.querySelector('.row-sno');
       if (sno) sno.textContent = index + 1;
 
-      const nameEl = row.querySelector('.item-name');
-      const qtyInput = row.querySelector('.qty-input');
-      const rateInput = row.querySelector('.rate-input');
-      const amountText = row.querySelector('.row-amount-text');
-
-      const name = nameEl ? nameEl.textContent.trim() : 'ITEM';
-      const qty = parseFloat(qtyInput ? qtyInput.value : 1) || 0;
-      const rate = parseFloat(rateInput ? rateInput.value : 0) || 0;
+      const name = row.querySelector('.item-name')?.textContent.trim() || 'ITEM';
+      const qty = parseFloat(row.querySelector('.qty-input')?.value) || 0;
+      const rate = parseFloat(row.querySelector('.rate-input')?.value) || 0;
+      const gstRate = Math.max(0, parseFloat(row.querySelector('.gst-input')?.value) || 0);
       const rowTotal = qty * rate;
+      const rowGst = rowTotal * gstRate / 100;
+      const totalWithGst = rowTotal + rowGst;
 
-      if (amountText) amountText.textContent = formatMoney(rowTotal);
+      row.querySelector('.row-amount-text').textContent = formatMoney(rowTotal);
+      row.querySelector('.row-total-gst-text').textContent = formatMoney(totalWithGst);
       subtotal += rowTotal;
-
-      updatedItems.push({ name, qty, rate });
+      gstAmount += rowGst;
+      updatedItems.push({ name, qty, rate, gstRate });
     });
 
     state.items = updatedItems;
 
-    // Discount Calculation
-    let discountVal = 0;
-    if (state.discountType === 'percent') {
-      discountVal = (subtotal * state.discount) / 100;
-    } else {
-      discountVal = state.discount;
-    }
-    if (discountVal > subtotal) discountVal = subtotal;
+    let discountVal = state.discountType === 'percent'
+      ? subtotal * state.discount / 100
+      : state.discount;
+    discountVal = Math.min(Math.max(0, discountVal), subtotal);
 
+    // Apply the discount proportionally across products before calculating GST.
+    const discountRatio = subtotal > 0 ? (subtotal - discountVal) / subtotal : 0;
+    gstAmount *= discountRatio;
     const taxableAmount = Math.max(0, subtotal - discountVal);
-
-    // GST Calculation
-    const effectiveGstRate = state.gstRate === 'custom' ? state.customGstRate : parseFloat(state.gstRate) || 0;
-    const gstAmount = (taxableAmount * effectiveGstRate) / 100;
-
-    // Grand Total
     const grandTotal = taxableAmount + gstAmount;
-
-    // Due calculation
     const dueAmount = Math.max(0, grandTotal - state.paidAmount);
 
-    // Dynamic Payment Status
     if (grandTotal > 0 && dueAmount === 0) {
       state.paymentStatus = 'PAID';
       getEl('paymentStatusSelect').value = 'PAID';
@@ -542,10 +541,9 @@
       getEl('paymentStatusSelect').value = 'PARTIALLY PAID';
     }
 
-    // Update DOM
     getEl('displaySubTotal').textContent = formatMoney(subtotal);
     getEl('displayDiscount').textContent = formatMoney(discountVal);
-    getEl('displayGstRate').textContent = effectiveGstRate;
+    getEl('displayGstRate').textContent = 'Varies';
     getEl('displayGstAmount').textContent = formatMoney(gstAmount);
     getEl('displayGrandTotal').textContent = formatMoney(grandTotal);
     getEl('displayAmountPaid').textContent = formatMoney(state.paidAmount);
@@ -553,11 +551,7 @@
     getEl('modalGrandTotal').textContent = formatMoney(grandTotal);
 
     updatePaymentStatusBadge();
-
-    if (!state.customQr) {
-      generateDynamicUPIQRCode(grandTotal);
-    }
-
+    if (!state.customQr) generateDynamicUPIQRCode(grandTotal);
     saveState();
   }
 
