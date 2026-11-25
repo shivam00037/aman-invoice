@@ -961,9 +961,21 @@ body {
 .inv-items-table th.col-sno { width: 50px; text-align: center; }
 .inv-items-table th.col-desc { text-align: left; }
 .inv-items-table th.col-qty { width: 85px; text-align: center; }
-.inv-items-table th.col-rate { width: 125px; text-align: center; }
-.inv-items-table th.col-amount { width: 130px; text-align: right; }
-.inv-items-table th.col-actions { width: 55px; text-align: center; }
+.inv-items-table th.col-rate { width: 82px; text-align: center; }
+.inv-items-table th.col-gst { width: 62px; text-align: center; }
+.inv-items-table th.col-amount { width: 92px; text-align: right; }
+.inv-items-table th.col-total-gst { width: 112px; text-align: right; }
+.inv-items-table th.col-actions { width: 48px; text-align: center; }
+
+.inv-items-table .gst-input {
+  width: 48px;
+  max-width: 100%;
+  padding: 4px 2px;
+  border: 1px solid #cbd5e1;
+  border-radius: 3px;
+  text-align: center;
+  font: inherit;
+}
 
 .inv-items-table td {
   padding: 6px 8px;
@@ -1872,4 +1884,11 @@ body {
     border: none !important;
     background: transparent !important;
   }
+}
+
+/* Product-wise GST columns */
+@media print {
+  .inv-items-table { font-size: 9px; }
+  .inv-items-table th, .inv-items-table td { padding: 5px 4px; }
+  .inv-items-table .gst-input { border: 0; padding: 0; background: transparent; }
 }
